@@ -8,20 +8,20 @@ class Regulation(TimeStampedModel):
         TimeStampedModel (abstract django model): class that provides
             self-updating created and modified fields
     """
-    doc_code = models.CharField(max_length=3, primary_key=True)
-    title = models.CharField(max_length=256, unique=True)
-    name = models.CharField(max_length=256, unique=True)   
-    celex_code = models.CharField(max_length=256, unique=True)
-    publication_date = models.CharField(max_length=256, unique=True)
-    doc_type = models.CharField(max_length=256, unique=True)
-    doc_type_code = models.CharField(max_length=256, unique=True)
-    author = models.CharField(max_length=256, unique=True)
-    languages = models.CharField(max_length=256, unique=True)
-    quicksearch_url = models.CharField(max_length=256, unique=True)
-    classification = models.CharField(max_length=256, unique=True)
-    date_effect = models.CharField(max_length=256, unique=True)
-    date_deadline = models.CharField(max_length=256, unique=True)
-    date_sig = models.CharField(max_length=256, unique=True)
+    doc_code = models.CharField(max_length=32, primary_key=True)
+    title = models.TextField(unique=True, default='')
+    name = models.CharField(max_length=256, null=True)
+    celex_code = models.CharField(max_length=64, unique=True, default="")
+    publication_date = models.DateField(default='1999-12-31')
+    doc_type = models.CharField(max_length=64, null=True)
+    doc_type_code = models.CharField(max_length=64, null=True)
+    author = models.TextField(null=True)
+    languages = models.TextField(null=True)
+    quicksearch_url = models.TextField(null=True)
+    classification = models.TextField(null=True)
+    date_effect = models.DateField(null=True)
+    date_deadline = models.DateField(null=True)
+    date_sig = models.DateField(null=True)
 
     class Meta:
         app_label = 'db'
