@@ -5,23 +5,23 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('db', '0004_alter_iborhistory_unique_together'),
-    ]
+    dependencies = [("db", "0004_alter_iborhistory_unique_together")]
 
     operations = [
         migrations.AddField(
-            model_name='iborhistory',
-            name='rating',
+            model_name="iborhistory",
+            name="rating",
             field=models.CharField(blank=True, max_length=251, null=True),
         ),
         migrations.AlterField(
-            model_name='iborhistory',
-            name='term_months',
+            model_name="iborhistory",
+            name="term_months",
             field=models.IntegerField(blank=True, db_index=True, null=True),
         ),
         migrations.AlterUniqueTogether(
-            name='iborhistory',
-            unique_together={('currency', 'date', 'term_months', 'rating', 'ibor_type')},
+            name="iborhistory",
+            unique_together={
+                ("currency", "date", "term_months", "rating", "ibor_type")
+            },
         ),
     ]

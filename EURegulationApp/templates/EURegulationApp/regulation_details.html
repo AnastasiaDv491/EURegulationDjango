@@ -1,0 +1,54 @@
+{% extends "EURegulationApp/base.html" %}
+{% load static %}
+
+{%block content%}
+  
+<h1>EU Regulations Analysis</h1>
+<div class="alert alert-primary" role="alert">
+  Note, you don't have to fill out all the fields.
+</div>
+
+<div class = "div_form">
+    <form method="get">
+        <h1>Filters</h1>
+        <label>{{ context.my_Filter.form.as_p }}</label><br>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+
+<div>
+    <h2> Results: </h2>
+
+    {%if context.all_listings%}
+
+        {% for listing in context.all_listings %}
+        <p><b>Code:</b> {{ listing.doc_code }}</p>
+        <p><b>Title:</b> {{ listing.title }}</p>    
+    
+        {% endfor %}
+    {%else%}
+    <div class="alert alert-warning" role="alert">Based on your filter, no data has been found.</div>
+  
+    {%endif%}
+</div>
+
+<div class="items">
+  <ul>
+    <li>
+        <ul>
+                <li>
+                    <a href="#">{{source}}</a>
+                    <ul>
+                    {% for tar, rel in target_rel%}
+                        {% comment %} <p class = "rel_text"> {{rel}}</p> {% endcomment %}
+                        <li><a href="#">{{tar}}</a></li>
+                    {% endfor %}
+                    </ul>
+                </li>
+        </ul>
+    </li>
+  </ul>
+</div>
+  
+{%endblock content%}

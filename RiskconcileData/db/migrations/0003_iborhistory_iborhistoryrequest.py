@@ -7,37 +7,83 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('db', '0002_fxpair_code'),
-    ]
+    dependencies = [("db", "0002_fxpair_code")]
 
     operations = [
         migrations.CreateModel(
-            name='IborHistoryRequest',
+            name="IborHistoryRequest",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uid', models.CharField(db_index=True, default=RiskconcileData.db.models.utils.get_short_uuid, editable=False, max_length=32, null=True, unique=True)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
-                ('ibor_type', models.CharField(max_length=251)),
-                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='db.currency')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uid",
+                    models.CharField(
+                        db_index=True,
+                        default=RiskconcileData.db.models.utils.get_short_uuid,
+                        editable=False,
+                        max_length=32,
+                        null=True,
+                        unique=True,
+                    ),
+                ),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField()),
+                ("ibor_type", models.CharField(max_length=251)),
+                (
+                    "currency",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="db.currency"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='IborHistory',
+            name="IborHistory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uid', models.CharField(db_index=True, default=RiskconcileData.db.models.utils.get_short_uuid, editable=False, max_length=32, null=True, unique=True)),
-                ('date', models.DateField(db_index=True)),
-                ('term_months', models.IntegerField(db_index=True)),
-                ('rate', models.FloatField()),
-                ('factset_code', models.CharField(max_length=251)),
-                ('ibor_type', models.CharField(max_length=251)),
-                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ibor_history', to='db.currency')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uid",
+                    models.CharField(
+                        db_index=True,
+                        default=RiskconcileData.db.models.utils.get_short_uuid,
+                        editable=False,
+                        max_length=32,
+                        null=True,
+                        unique=True,
+                    ),
+                ),
+                ("date", models.DateField(db_index=True)),
+                ("term_months", models.IntegerField(db_index=True)),
+                ("rate", models.FloatField()),
+                ("factset_code", models.CharField(max_length=251)),
+                ("ibor_type", models.CharField(max_length=251)),
+                (
+                    "currency",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ibor_history",
+                        to="db.currency",
+                    ),
+                ),
             ],
             options={
-                'ordering': ('date',),
-                'unique_together': {('currency', 'date', 'term_months')},
+                "ordering": ("date",),
+                "unique_together": {("currency", "date", "term_months")},
             },
         ),
     ]

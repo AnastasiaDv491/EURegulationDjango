@@ -151,5 +151,5 @@ ccy_country_map = {
     "VUV": "VU",
     "YER": "YE",
     "ZAR": "ZA",
-    "ZMW": "ZM"
+    "ZMW": "ZM",
 }

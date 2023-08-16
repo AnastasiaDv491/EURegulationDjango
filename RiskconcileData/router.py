@@ -1,11 +1,11 @@
 class RiskConcileDataRouter:
-    route_app_labels = {'db'}
+    route_app_labels = {"db"}
 
     def db_for_read(self, model, **hints):
-        return 'default'
+        return "default"
 
     def db_for_write(self, model, **hints):
-        return 'default'
+        return "default"
 
     def allow_relation(self, obj1, obj2, **hints):
         return True

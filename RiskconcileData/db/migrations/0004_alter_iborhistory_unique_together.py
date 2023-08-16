@@ -5,13 +5,11 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('db', '0003_iborhistory_iborhistoryrequest'),
-    ]
+    dependencies = [("db", "0003_iborhistory_iborhistoryrequest")]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='iborhistory',
-            unique_together={('currency', 'date', 'term_months', 'ibor_type')},
-        ),
+            name="iborhistory",
+            unique_together={("currency", "date", "term_months", "ibor_type")},
+        )
     ]

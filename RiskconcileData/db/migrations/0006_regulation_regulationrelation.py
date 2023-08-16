@@ -6,32 +6,53 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('db', '0005_auto_20230711_0847'),
-    ]
+    dependencies = [("db", "0005_auto_20230711_0847")]
 
     operations = [
         migrations.CreateModel(
-            name='Regulation',
+            name="Regulation",
             fields=[
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('doc_code', models.CharField(max_length=3, primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=256, unique=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                (
+                    "doc_code",
+                    models.CharField(max_length=3, primary_key=True, serialize=False),
+                ),
+                ("title", models.CharField(max_length=256, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='RegulationRelation',
+            name="RegulationRelation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('relation_type', models.CharField(max_length=32)),
-                ('source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sources', to='db.regulation')),
-                ('target', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='targets', to='db.regulation')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("relation_type", models.CharField(max_length=32)),
+                (
+                    "source",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sources",
+                        to="db.regulation",
+                    ),
+                ),
+                (
+                    "target",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="targets",
+                        to="db.regulation",
+                    ),
+                ),
             ],
-            options={
-                'unique_together': {('source', 'target', 'relation_type')},
-            },
+            options={"unique_together": {("source", "target", "relation_type")}},
         ),
     ]

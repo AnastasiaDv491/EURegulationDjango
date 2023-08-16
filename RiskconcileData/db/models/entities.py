@@ -4,6 +4,7 @@
 
 from django.db import models
 
+
 class TimeStampedModel(models.Model):
     """An abstract base class model that provides self-updating
        created and modified fields.
@@ -11,13 +12,13 @@ class TimeStampedModel(models.Model):
     Args:
         models (django.db.models.Model): standard django model template
     """
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
-        app_label = 'db'
-
+        app_label = "db"
 
 
 class Entity(TimeStampedModel):
@@ -26,10 +27,12 @@ class Entity(TimeStampedModel):
     Args:
         TimeStampedModel ([type]): [description]
     """
+
     name = models.CharField(max_length=128)
     type = models.CharField(max_length=64, null=True)
-    country = models.ForeignKey('Country', null=True, 
-                                on_delete=models.SET('Country deleted'))
+    country = models.ForeignKey(
+        "Country", null=True, on_delete=models.SET("Country deleted")
+    )
     industry = models.CharField(max_length=64, null=True)
     sector = models.CharField(max_length=64, null=True)
     factset_entity_id = models.CharField(max_length=16, null=True, unique=True)
@@ -39,7 +42,7 @@ class Entity(TimeStampedModel):
 
     class Meta:
         unique_together = (("name", "type"),)
-        app_label = 'db'
+        app_label = "db"
 
 
 class Security(TimeStampedModel):
@@ -48,7 +51,8 @@ class Security(TimeStampedModel):
     Args:
         TimeStampedModel ([type]): [description]
     """
-    isin = models.CharField(max_length=12, null=True, unique=True) # Unique if exists
+
+    isin = models.CharField(max_length=12, null=True, unique=True)  # Unique if exists
     name = models.CharField(max_length=258)
     type = models.CharField(max_length=32)
     exchange = models.CharField(max_length=8, null=True)
@@ -56,4 +60,4 @@ class Security(TimeStampedModel):
     fsym_id = models.CharField(max_length=16)
     primary = models.BooleanField()
     ticker = models.CharField(max_length=64, null=True)
-    entity = models.ForeignKey('Entity', on_delete=models.CASCADE)
+    entity = models.ForeignKey("Entity", on_delete=models.CASCADE)
