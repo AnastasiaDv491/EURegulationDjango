@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django_filters.views import FilterView
-from collections import OrderedDict
 
 import pandas as pd
 import numpy as np
@@ -11,13 +10,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "RiskconcileData.settings")
 django.setup()
 
 from RiskconcileData.db.models import Regulation, RegulationRelation
-from .filters import RegFilter
-
-# Create your views here.
-def main_page(request):
-    regulations = list(Regulation.objects.using('riskconcilemodels').values_list("doc_code", flat = True).distinct())
-    return render(request, 'EURegulationApp/main_page.html', {'regulations':regulations})
-
 
 def merge_Reg_Rel_tables(reg_table, rel_table):
 
@@ -35,6 +27,10 @@ def merge_Reg_Rel_tables(reg_table, rel_table):
 
     return merged_table
 
+source = "2019/1156"
+df_regulation = pd.DataFrame(Regulation.objects.all().values())
+df_relation = pd.DataFrame(RegulationRelation.objects.all().values())
+merged_table2 = merge_Reg_Rel_tables(df_regulation,df_relation)
 
 class Node:
   def __init__(self, doc_code, target_rel=[]):
@@ -70,51 +66,14 @@ def get_target(node, merged_table2):
 
 
 
-# node = Node(doc_code="2019/1156")
-
-def all_listings(request):
-    all_listings = Regulation.objects.using('riskconcilemodels').order_by('publication_date')
-    my_Filter = RegFilter(request.GET, queryset=all_listings) 
-    all_listings = my_Filter.qs
-    context = {"all_listings": all_listings, "my_Filter": my_Filter}
-    if len(all_listings) > 0:
-        df_regulation = pd.DataFrame(Regulation.objects.using('riskconcilemodels').all().values())
-        df_relation = pd.DataFrame(RegulationRelation.objects.using('riskconcilemodels').all().values())
-        
-        # TODO:
-        # - add links to sources and targets
-        # - add a different view if they search by the date
-
-        for match in all_listings: # can only be one match 
-            merged_table = merge_Reg_Rel_tables(df_regulation,df_relation)
-            node = Node(doc_code=match.doc_code)
-            get_target(node, merged_table)  # return a dict with source codes as keys and other attributes as their values
-
-            merged_table = merged_table[merged_table["source_id"]==match.doc_code]
-            if merged_table.empty:
-                source_id = ""
-                target_ids = ""
-                relations = ""
-                target_rel = ""
-            else:
-                source_id = "" # source is always the first key
-
-                other_sources = "" # other regulations that are also sources
-
-                # In HTML: logic that if a value is a source, then it becomes a source
-                target_ids = merged_table["target_id"].values.tolist()
-                relations = merged_table["relation_type"].values.tolist()
-                print(other_sources)
-                target_rel = zip(target_ids, relations)
-                # merged_table = merged_table[["source_id", "target_id", "relation_type"]]
-    
-    return render(request, 'EURegulationApp/regulation_details.html', {"context":context,"source": source_id,"other_sources":other_sources, "target_rel": node.target_rel, "node": node})
-
-
-
-
-
-
-
-
-
+node = Node(doc_code="2019/1156")
+get_target(node, merged_table2)
+# print(node.target_rel[0][0].target_rel)
+print("runs",j)
+print("here")
+for i in node.target_rel:
+   print(i[0].doc_code)
+   for j in i[0].target_rel:
+      print("--"+j[0].doc_code)
+      for k in j[0].target_rel:
+        print("----"+k[0].doc_code)

@@ -1,0 +1,11 @@
+{% for regulation in target_rel %}
+    <li>
+        {{ regulation.0.doc_code }}
+        
+        {% if regulation.0.target_rel|length %}
+            <ul>
+                {% include "regulationNode.html" with target_rel=regulation.0.target_rel%}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}
