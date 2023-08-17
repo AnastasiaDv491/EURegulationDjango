@@ -8,7 +8,6 @@ django.setup()
 from RiskconcileData.db.models import Regulation, RegulationRelation
 
 class RegFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='iexact')
 
     class Meta:
         model = Regulation

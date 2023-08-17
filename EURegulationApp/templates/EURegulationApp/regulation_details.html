@@ -33,22 +33,26 @@
     {%endif%}
 </div>
 
-<div class="items">
-  <ul>
-    <li>
-        <ul>
-                <li>
-                    <a href="#">{{source}}</a>
-                    <ul>
-                    {% for tar, rel in target_rel%}
-                        {% comment %} <p class = "rel_text"> {{rel}}</p> {% endcomment %}
-                        <li><a href="#">{{tar}}</a></li>
-                    {% endfor %}
-                    </ul>
-                </li>
-        </ul>
-    </li>
-  </ul>
-</div>
-  
+{{source}}
+{%if source%}
+    <div class="items">
+    {{dict}}
+    <ul>
+        <li>
+            <ul>
+                    <li>
+                    {% comment %} If a value is a source then it becomes a source {% endcomment %}
+                        <a href="#">{{source}}</a>
+                        <ul>
+                        {% for tar, rel in target_rel%}
+                            {% comment %} <p class = "rel_text"> {{rel}}</p> {% endcomment %}
+                            <li><a href="#">{{tar}}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </li>
+            </ul>
+        </li>
+    </ul>
+    </div>
+{%endif%}
 {%endblock content%}
