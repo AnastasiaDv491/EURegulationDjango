@@ -33,9 +33,11 @@ df_relation = pd.DataFrame(RegulationRelation.objects.all().values())
 merged_table2 = merge_Reg_Rel_tables(df_regulation,df_relation)
 
 class Node:
-  def __init__(self, doc_code, target_rel=[]):
+  def __init__(self, doc_code, target_rel=[], rel_type="", url=""):
     self.doc_code = doc_code
     self.target_rel = target_rel
+    self.rel_type = rel_type
+    self.url = url
 
 
 j = 0
@@ -50,30 +52,31 @@ def get_target(node, merged_table2):
         # print("doc"+node.doc_code)
         # print(test["target_id"])
 
-        for target, rel in zip(test["target_id"], test["relation_type"]):
+        for target, rel, url in list(zip(test["target_id"], test["relation_type"], test["quicksearch_url_y"])):
             # print(target, rel)
                
-            node.target_rel.append([Node(doc_code=target,target_rel=[]),rel])
+            node.target_rel.append([Node(doc_code=target,target_rel=[], rel_type=rel, url=url)])
             j += 1
 
         print("")
         for i in node.target_rel:
             if i[0].doc_code not in regulationsFetched:
-                # print("loop2 " +i[0].doc_code)
-
+          
                 regulationsFetched.append(i[0].doc_code) 
                 get_target(i[0], merged_table2)
+            
 
 
 
 node = Node(doc_code="2019/1156")
 get_target(node, merged_table2)
-# print(node.target_rel[0][0].target_rel)
+
 print("runs",j)
 print("here")
 for i in node.target_rel:
-   print(i[0].doc_code)
+   print(i[0].doc_code + " "+i[0].rel_type)
+
    for j in i[0].target_rel:
-      print("--"+j[0].doc_code)
+      print("--"+j[0].doc_code +" "+j[0].rel_type)      
       for k in j[0].target_rel:
-        print("----"+k[0].doc_code)
+        print("----"+k[0].doc_code +k[0].rel_type)

@@ -1,0 +1,25 @@
+{% extends 'EURegulationApp/regulation_details.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>Details for regulation: <b>{{regulation.0.doc_code}}</b> </h1>
+<div>
+    <h4> Title : </h4>  
+    <p>{{regulation.0.title}}</p>
+{{node.target_rel|length}}
+    <p> <b>Document type :</b> {{regulation.0.doc_type}}</p>
+
+    <p><a href="{{regulation.0.quicksearch_url}}">EULex</a></p>
+
+    <p> <b>Author(s) :</b> {{regulation.0.author}}</p>
+    <p> <b>Categories :</b> {{regulation.0.classification}}</p>
+    <p> <b>Date of effect :</b> {{regulation.0.date_effect}}</p>
+    <p> <b>Deadline :</b> {{regulation.0.date_deadline}}</p>
+    <p> <b>Date of signature :</b> {{regulation.0.date_sig}}</p>
+
+{% include "./regulation_relationships.html" %}      
+</div>
+
+
+{% endblock %}

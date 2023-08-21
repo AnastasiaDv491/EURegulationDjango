@@ -1,4 +1,4 @@
-import django_filters
+from django import forms
 import django
 import os
 
@@ -7,8 +7,8 @@ django.setup()
 
 from RiskconcileData.db.models import Regulation, RegulationRelation
 
-class RegFilter(django_filters.FilterSet):
-
+class RegForm(forms.ModelForm):
+    # specify the name of model to use
     class Meta:
         model = Regulation
-        fields = ['doc_code']
+        fields = ["doc_code"]

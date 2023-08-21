@@ -1,10 +1,13 @@
-{% for regulation in target_rel %}
-    <li>
-        {{ regulation.0.doc_code }}
+{% load static %}
+
+{% for reg in target_rel %}
+    <li class= "list_reg">
+        <p> <a href="{% url 'regulation' reg.0.doc_code %}">{{ reg.0.doc_code }}</a> -- {{reg.0.rel_type}} </p>
+
         
-        {% if regulation.0.target_rel|length %}
-            <ul>
-                {% include "regulationNode.html" with target_rel=regulation.0.target_rel%}
+        {% if reg.0.target_rel|length %}
+            <ul class= "nested">
+                {% include "regulationNode.html" with target_rel=reg.0.target_rel%}
             </ul>
         {% endif %}
     </li>

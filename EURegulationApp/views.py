@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django_filters.views import FilterView
 from collections import OrderedDict
+from django.shortcuts import get_list_or_404
 
 import pandas as pd
 import numpy as np
@@ -12,11 +13,6 @@ django.setup()
 
 from RiskconcileData.db.models import Regulation, RegulationRelation
 from .filters import RegFilter
-
-# Create your views here.
-def main_page(request):
-    regulations = list(Regulation.objects.using('riskconcilemodels').values_list("doc_code", flat = True).distinct())
-    return render(request, 'EURegulationApp/main_page.html', {'regulations':regulations})
 
 
 def merge_Reg_Rel_tables(reg_table, rel_table):
@@ -37,10 +33,11 @@ def merge_Reg_Rel_tables(reg_table, rel_table):
 
 
 class Node:
-  def __init__(self, doc_code, target_rel=[]):
+  def __init__(self, doc_code, target_rel=[], rel_type="", url=""):
     self.doc_code = doc_code
     self.target_rel = target_rel
-
+    self.rel_type = rel_type
+    self.url = url
 
 j = 0
 depth = 500
@@ -49,71 +46,71 @@ def get_target(node, merged_table2):
     global j
 
     if j <= depth:
-        # print(node.doc_code)
         test = merged_table2[merged_table2["source_id"]==node.doc_code]
-        # print("doc"+node.doc_code)
-        # print(test["target_id"])
 
-        for target, rel in zip(test["target_id"], test["relation_type"]):
+        for target, rel, url in list(zip(test["target_id"], test["relation_type"], test["quicksearch_url_y"])):               
             # print(target, rel)
                
-            node.target_rel.append([Node(doc_code=target,target_rel=[]),rel])
+            node.target_rel.append([Node(doc_code=target,target_rel=[], rel_type=rel, url=url)])
             j += 1
 
-        print("")
         for i in node.target_rel:
             if i[0].doc_code not in regulationsFetched:
-                # print("loop2 " +i[0].doc_code)
 
                 regulationsFetched.append(i[0].doc_code) 
                 get_target(i[0], merged_table2)
 
-
-
-# node = Node(doc_code="2019/1156")
 
 def all_listings(request):
     all_listings = Regulation.objects.using('riskconcilemodels').order_by('publication_date')
     my_Filter = RegFilter(request.GET, queryset=all_listings) 
     all_listings = my_Filter.qs
     context = {"all_listings": all_listings, "my_Filter": my_Filter}
-    if len(all_listings) > 0:
-        df_regulation = pd.DataFrame(Regulation.objects.using('riskconcilemodels').all().values())
-        df_relation = pd.DataFrame(RegulationRelation.objects.using('riskconcilemodels').all().values())
+
+    return render(request, 'EURegulationApp/regulation_details.html', {"context":context})
+
+# def get_relations(request):
+#     my_filter = RegFilter(request.POST, queryset=Regulation.objects.using('riskconcilemodels').order_by('publication_date')) 
+#     results = my_filter.qs
+#     if len(results)>1:
+
+#         df_regulation = pd.DataFrame(Regulation.objects.using('riskconcilemodels').all().values())
+#         df_relation = pd.DataFrame(RegulationRelation.objects.using('riskconcilemodels').all().values())
         
-        # TODO:
-        # - add links to sources and targets
-        # - add a different view if they search by the date
+#         # TODO:
+#         # - add links to sources and targets
+#         # - add a different view if they search by the date
 
-        for match in all_listings: # can only be one match 
-            merged_table = merge_Reg_Rel_tables(df_regulation,df_relation)
-            node = Node(doc_code=match.doc_code)
-            get_target(node, merged_table)  # return a dict with source codes as keys and other attributes as their values
+#         for match in results: # can only be one match 
+#             merged_table = merge_Reg_Rel_tables(df_regulation,df_relation)
+#             node = Node(doc_code=match.doc_code)
+#             get_target(node, merged_table)  # return a dict with source codes as keys and other attributes as their values
 
-            merged_table = merged_table[merged_table["source_id"]==match.doc_code]
-            if merged_table.empty:
-                source_id = ""
-                target_ids = ""
-                relations = ""
-                target_rel = ""
-            else:
-                source_id = "" # source is always the first key
-
-                other_sources = "" # other regulations that are also sources
-
-                # In HTML: logic that if a value is a source, then it becomes a source
-                target_ids = merged_table["target_id"].values.tolist()
-                relations = merged_table["relation_type"].values.tolist()
-                print(other_sources)
-                target_rel = zip(target_ids, relations)
-                # merged_table = merged_table[["source_id", "target_id", "relation_type"]]
+#             merged_table = merged_table[merged_table["source_id"]==match.doc_code]
     
-    return render(request, 'EURegulationApp/regulation_details.html', {"context":context,"source": source_id,"other_sources":other_sources, "target_rel": node.target_rel, "node": node})
+#         return render(request, 'EURegulationApp/regulation_relationships.html', {"results":results,"target_rel": node.target_rel, "node": node,"table":merged_table})
 
 
+def get_rel(doc_code):
+
+    df_regulation = pd.DataFrame(Regulation.objects.using('riskconcilemodels').all().values())
+    df_relation = pd.DataFrame(RegulationRelation.objects.using('riskconcilemodels').all().values())
+    print(df_relation.size)
+    # TODO:
+    # - add links to sources and targets
+    # - add a different view if they search by the date
+
+    merged_table = merge_Reg_Rel_tables(df_regulation,df_relation)
+    nodea = Node(doc_code=doc_code,target_rel=[])
+    j = 0
+    get_target(nodea, merged_table)  # return a dict with source codes as keys and other attributes as their values
+    return nodea
 
 
-
+def regulation(request, doc_code):
+    posts = Regulation.objects.using('riskconcilemodels').filter(doc_code = doc_code)
+    nodeb = get_rel(doc_code)
+    return render(request, 'EURegulationApp/regulation.html', {'regulation': posts,"doc":doc_code,"node":nodeb, "target_rel": nodeb.target_rel})
 
 
 

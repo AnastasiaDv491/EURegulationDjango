@@ -7,15 +7,13 @@
 
   <div class="div_form">
     <form method="get">
-      <h1>Filters</h1>
       <label>{{ context.my_Filter.form.as_p }}</label><br />
-      <button type="submit" class="btn btn-primary">Search</button>
+      <button type="submit" class="btn btn-primary" id = "button_search">Search</button>
     </form>
   </div>
 
   <div>
     <h2>Results:</h2>
-
     {% if context.all_listings %}
       {% for listing in context.all_listings %}
         <p>
@@ -24,22 +22,13 @@
         <p>
           <b>Title:</b> {{ listing.title }}
         </p>
+        <p><a href="{% url 'regulation' listing.doc_code %}">More details.</a></p>
       {% endfor %}
     {% else %}
       <div class="alert alert-warning" role="alert">Based on your filter, no data has been found.</div>
     {% endif %}
   </div>
 
-  {{ node.doc_code }}
-<ul>
-    {% include "./regulationNode.html" %}
-</ul>
-
-  {% for regulation in node.target_rel  %}
-        <p>
-          <b>Title:</b> {{ regulation.0.doc_code }}
-        </p>
-      {% endfor %}
 
 
-  {% endblock %}
+{% endblock %}
