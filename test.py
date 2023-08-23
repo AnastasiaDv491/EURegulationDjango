@@ -66,17 +66,40 @@ def get_target(node, merged_table2):
                 get_target(i[0], merged_table2)
             
 
+def get_rel1(doc_code):
+    df_regulation = pd.DataFrame(Regulation.objects.all().values())
+    df_relation = pd.DataFrame(RegulationRelation.objects.all().values())
+    merged_table = merge_Reg_Rel_tables(df_regulation,df_relation)
+    merged_table = merged_table.sort_values(by=['date_effect_y'])
+    node_obj = Node(doc_code=doc_code)
+    get_target(node_obj, merged_table)
+    return node_obj
 
 
-node = Node(doc_code="2019/1156")
-get_target(node, merged_table2)
+def regulation(doc_code):
+    """
+    Function that filters "Regulation" table based on the doc code that is passed on "regulation_details.html" page
+    input: doc code
+    Ouptut: detailed information about a given regulation
+    """
+    posts = Regulation.objects.filter(doc_code = doc_code)
+    node_retrieved = get_rel1(doc_code)
+    return node_retrieved
 
-print("runs",j)
-print("here")
-for i in node.target_rel:
+test = regulation(source)
+# print(test.target_rel)
+
+# node = Node(doc_code="2019/1156", target_rel=[])
+# get_target(node, merged_table2)
+
+# print("runs",j)
+# print("here")
+for i in test.target_rel:
    print(i[0].doc_code + " "+i[0].rel_type)
 
    for j in i[0].target_rel:
       print("--"+j[0].doc_code +" "+j[0].rel_type)      
       for k in j[0].target_rel:
         print("----"+k[0].doc_code +k[0].rel_type)
+        for a in k[0].target_rel:
+            print("----"+k[0].doc_code +k[0].rel_type)

@@ -1,14 +1,16 @@
 {% extends 'EURegulationApp/regulation_details.html' %}
+
 {% load static %}
 
 {% block content %}
-
 <h1>Details for regulation: <b>{{regulation.0.doc_code}}</b> </h1>
 <div>
     <h4> Title : </h4>  
     <p>{{regulation.0.title}}</p>
-{{node.target_rel|length}}
+
     <p> <b>Document type :</b> {{regulation.0.doc_type}}</p>
+    <p> <b>Document name :</b> {{regulation.0.name}}</p>
+
 
     <p><a href="{{regulation.0.quicksearch_url}}">EULex</a></p>
 
@@ -18,8 +20,26 @@
     <p> <b>Deadline :</b> {{regulation.0.date_deadline}}</p>
     <p> <b>Date of signature :</b> {{regulation.0.date_sig}}</p>
 
-{% include "./regulation_relationships.html" %}      
+
+    {% if node.target_rel %}
+    <div class= "tree-diagram">
+        <h2> Relations: </h2>
+        <h5>Main regulation: </h5>
+        <a href={{node.url}}>{{node.doc_code}} {{node.doc_type}}</a> 
+        
+    </div>
+
+        <ul>
+            {% include "./regulationNode.html" %}
+        </ul>
+
+    </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">This regulation has no relationships.</div>
+    {% endif %}  
 </div>
+{% endblock %}
 
-
+{% block script %}
+    <script src="{% static './interactions.js' %}" type="text/javascript"></script>
 {% endblock %}

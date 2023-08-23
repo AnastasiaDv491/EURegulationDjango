@@ -2,18 +2,19 @@
 {% load static %}
 
 {% block content %}
-  <h1>EU Regulations Analysis</h1>
-  <div class="alert alert-primary" role="alert">Note, you don't have to fill out all the fields.</div>
 
+
+  <h1>EU Regulations Analysis</h1>
+  <div class="alert alert-primary" role="alert">Note, you can only use one filter at a time.</div>
   <div class="div_form">
     <form method="get">
-      <label>{{ context.my_Filter.form.as_p }}</label><br />
+      <label>{{ context.my_Filter.form.as_p}}</label><br />
       <button type="submit" class="btn btn-primary" id = "button_search">Search</button>
     </form>
   </div>
 
   <div>
-    <h2>Results:</h2>
+    <h2>Results: </h2>
     {% if context.all_listings %}
       {% for listing in context.all_listings %}
         <p>
@@ -22,13 +23,15 @@
         <p>
           <b>Title:</b> {{ listing.title }}
         </p>
-        <p><a href="{% url 'regulation' listing.doc_code %}">More details.</a></p>
+        <p><a href="{% url 'regulation' listing.doc_code %}">More details</a></p>
       {% endfor %}
     {% else %}
       <div class="alert alert-warning" role="alert">Based on your filter, no data has been found.</div>
     {% endif %}
   </div>
 
+{% endblock %}
 
-
+{% block script %}
+    <script src="{% static './interactions.js' %}" type="text/javascript"></script>
 {% endblock %}

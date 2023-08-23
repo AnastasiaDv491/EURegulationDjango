@@ -2,12 +2,11 @@
 
 {% for reg in target_rel %}
     <li class= "list_reg">
-        <p> <a href="{% url 'regulation' reg.0.doc_code %}">{{ reg.0.doc_code }}</a> -- {{reg.0.rel_type}} </p>
+        <p> <a href="{% url 'regulation' reg.doc_code %}">{{ reg.doc_code }}</a>  {{ reg.doc_type }} -- {{reg.rel_type}} </p>
 
-        
-        {% if reg.0.target_rel|length %}
+        {% if reg.target_rel|length %}
             <ul class= "nested">
-                {% include "regulationNode.html" with target_rel=reg.0.target_rel%}
+                {% include "regulationNode.html" with target_rel=reg.target_rel%}
             </ul>
         {% endif %}
     </li>
