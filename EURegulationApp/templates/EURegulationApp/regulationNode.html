@@ -1,8 +1,7 @@
 {% load static %}
-
 {% for reg in target_rel %}
     <li class= "list_reg">
-        <p> <a href="{% url 'regulation' reg.doc_code %}">{{ reg.doc_code }}</a>  {{ reg.doc_type }} -- {{reg.rel_type}} </p>
+        <p class = "document_name" > <a href="{% url 'regulation' reg.doc_code %}">{{ reg.doc_code }}</a>  {{ reg.doc_type }} -- {{reg.rel_type}} </p>
 
         {% if reg.target_rel|length %}
             <ul class= "nested">
@@ -11,3 +10,4 @@
         {% endif %}
     </li>
 {% endfor %}
+    <script src="{% static './interactions.js' %}" type="text/javascript"></script>

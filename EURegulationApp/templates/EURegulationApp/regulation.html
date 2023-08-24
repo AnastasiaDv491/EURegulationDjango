@@ -23,7 +23,9 @@
 
     {% if node.target_rel %}
     <div class= "tree-diagram">
-        <h2> Relations: </h2>
+        <h2> Relations </h2>
+        <div class="alert alert-primary" role="alert">Note, that duplicated regulations are highlighted in red.</div>
+
         <h5>Main regulation: </h5>
         <a href={{node.url}}>{{node.doc_code}} {{node.doc_type}}</a> 
         

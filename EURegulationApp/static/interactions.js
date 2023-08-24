@@ -1,14 +1,20 @@
-var list_el = [];
+var elements = document.querySelectorAll('.document_name');
+var arrayOfUsedNames = [];
 
-function check_duplicates() {
-  els = document.getElementsByClassName("nested");
-  for (el in els) {
-    var text = el.textContent;
-    list_el.push(text);
+for (var i = 0; i < elements.length; i++)
+{
+  var index = arrayOfUsedNames.indexOf(elements[i].innerHTML);
 
-    if(list_el.includes(text)){
-      el.classList.add("repeated");
-    }
+  if (index == -1)
+  {
+    arrayOfUsedNames.push(elements[i].innerHTML);
+  } 
 
+  else
+  {
+    elements[i].classList.add("repeated")
   }
+
 }
+
+console.log(arrayOfUsedNames);
